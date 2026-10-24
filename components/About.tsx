@@ -4,19 +4,19 @@ const learning = ["HTML", "CSS", "JavaScript", "Python", "React", "Next.js"];
 
 export default function About() {
   return (
-    <section id="about" className="mx-auto max-w-5xl px-6 py-24 sm:px-12 sm:py-32 lg:px-24">
+    <section id="about" className="editorial-section mx-auto max-w-6xl px-6 py-24 sm:px-12 sm:py-32 lg:px-16">
       <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:gap-16">
         <div>
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-line bg-panel/50 px-3 py-1.5 text-xs font-medium text-muted backdrop-blur-sm">
+          <div className="section-kicker mb-6">
             <span className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_rgba(95,232,210,0.7)]" />
             A little about me
           </div>
-          <h2 className="font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">About</h2>
+          <h2 className="font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">A builder in the making.</h2>
           <p className="mt-6 max-w-xl text-base leading-8 text-muted sm:text-lg">
-            I'm a student who got into building software mostly by taking things apart to see how they worked, then trying to put my own version back together. I went through O Levels and then A Levels, and somewhere in between started spending more time writing code than anything else.
+            I&apos;m a student who got into building software mostly by taking things apart to see how they worked, then trying to put my own version back together. I went through O Levels and then A Levels, and somewhere in between started spending more time writing code than anything else.
           </p>
           <p className="mt-5 max-w-xl text-base leading-8 text-muted sm:text-lg">
-            This portfolio is one of the first things I've built carefully, end to end — from the visual language down to the working contact form.
+            This portfolio is one of the first things I&apos;ve built carefully, end to end — from the visual language down to the working contact form.
           </p>
         </div>
 

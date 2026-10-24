@@ -24,7 +24,7 @@
 
 This repository contains my personal developer portfolio, built as a functional web application with **Next.js, React, TypeScript, Tailwind CSS, and custom interactive components**.
 
-The website combines a dark glass-inspired visual system with responsive layouts, motion, interactive elements, project showcases, and a server-side contact system.
+The website combines a light editorial visual system with restrained glass surfaces, responsive layouts, motion, interactive elements, project showcases, and a server-side contact system.
 
 The project is also a space for experimenting with modern web interfaces, interaction design, animation, and practical full-stack web development.
 
@@ -37,7 +37,7 @@ The project is also a space for experimenting with modern web interfaces, intera
 ### UI & Interaction
 
 * Responsive Hero, About, Skills, Journey, Projects, Contact, and Footer sections
-* Dark glass-inspired visual design
+* Light editorial visual design with selective glass surfaces
 * Interactive skills workspace
 * Responsive desktop and mobile layouts
 * Animated mobile navigation
@@ -57,7 +57,7 @@ The portfolio includes dedicated project areas for:
 
 * Interactive web experiments
 * Useful digital tools
-* MediaSnap
+* Ordexa restaurant operations software
 * Online Store
 * Future projects and experiments
 
@@ -85,7 +85,8 @@ Sensitive API credentials remain server-side and are not exposed to the browser.
 | **Next.js**      | Application framework and routing              |
 | **React**        | Component-based UI                             |
 | **TypeScript**   | Type-safe development                          |
-| **Tailwind CSS** | Utility-first styling                          |
+| **Tailwind CSS** | Utility-first styling (v4)                     |
+| **ESLint**       | React and Next.js code quality checks          |
 | **CSS**          | Custom animations, effects, and visual styling |
 | **Resend**       | Contact-form email delivery                    |
 | **Vercel**       | Production deployment                          |
@@ -130,7 +131,7 @@ PORTFOLIO/
 
 ### Requirements
 
-* Node.js 18+
+* Node.js 20.9+
 * npm
 
 ### Clone the repository
@@ -156,6 +157,14 @@ Then open:
 
 ```text
 http://localhost:3000
+```
+
+Useful checks:
+
+```bash
+npm run typecheck
+npm run lint
+npm run build
 ```
 
 ## Environment Variables

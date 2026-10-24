@@ -1,48 +1,57 @@
-import Interactive3D from "@/components/Interactive3D";
+import { ArrowDownRight, ArrowUpRight, Code2, Layers3, Sparkles } from "lucide-react";
+
+function WorkspacePreview() {
+  return (
+    <div className="hero-workspace" aria-label="Illustrative software workspace">
+      <div className="hero-workspace__glow" />
+      <div className="hero-window hero-window--back">
+        <div className="hero-window__bar"><span /><span /><span /></div>
+        <div className="hero-window__lines"><i /><i /><i /><i /></div>
+      </div>
+      <div className="hero-window hero-window--front">
+        <div className="hero-window__bar"><span /><span /><span /><b>workspace / build</b></div>
+        <div className="hero-window__body">
+          <div className="hero-window__sidebar"><i /><i /><i /><i /></div>
+          <div className="hero-window__content">
+            <div className="hero-window__eyebrow">A small idea, made useful</div>
+            <div className="hero-window__title">Build with<br /><em>intention.</em></div>
+            <div className="hero-window__meter"><span /><span /><span /></div>
+            <div className="hero-window__footer"><span>interactive surface</span><strong>● live preview</strong></div>
+          </div>
+        </div>
+      </div>
+      <div className="hero-float hero-float--top"><Code2 className="h-4 w-4" /><span>component thinking</span></div>
+      <div className="hero-float hero-float--bottom"><Sparkles className="h-4 w-4" /><span>curious by default</span></div>
+    </div>
+  );
+}
 
 export default function Hero() {
   return (
-    <section
-      id="home"
-      className="relative flex min-h-screen flex-col justify-center overflow-hidden px-6 pb-20 pt-28 sm:px-12 sm:pb-24 lg:px-24"
-    >
-      <div className="hero-3d-anchor absolute inset-y-0 right-0 hidden w-[47%] items-center justify-center lg:flex">
-        <Interactive3D />
-      </div>
-
-      <div className="relative z-10 max-w-5xl lg:max-w-4xl">
-        <p className="mb-4 text-sm text-muted">Hi, I&apos;m</p>
-
-        <h1 className="font-display text-[clamp(3.2rem,15vw,6rem)] font-semibold leading-[0.88] tracking-[-0.045em] text-ink sm:text-[clamp(4.5rem,10vw,7rem)] lg:text-[clamp(5rem,7.2vw,8rem)]">
-          Abdulhadi
-          <br />
-          <span className="text-ink/55">Tahir</span>
-        </h1>
-
-        <p className="mt-7 max-w-md text-base leading-7 text-muted sm:text-lg">
-          A student exploring computer science, programming, and technology - learning by building and refining ideas on the web.
-        </p>
-
-        <div className="mt-10 flex flex-wrap gap-3">
-          <a
-            href="#projects"
-            className="rounded-full bg-ink px-6 py-3 text-sm font-medium text-void transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(95,232,210,0.25)]"
-          >
-            Explore
-          </a>
-          <a
-            href="/Abdulhadi_Tahir_CV.pdf"
-            download
-            className="rounded-full border border-line bg-panel/25 px-6 py-3 text-sm font-medium text-ink transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan/45 hover:bg-panel/45"
-          >
-            Download CV
-          </a>
+    <section id="home" className="hero-section relative overflow-hidden px-6 pb-20 pt-32 sm:px-12 sm:pb-28 lg:px-16 lg:pt-40">
+      <div className="hero-scanline" />
+      <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[.9fr_1.1fr] lg:gap-8">
+        <div>
+          <div className="hero-status"><span className="hero-status__dot" /> Exploring, learning, building</div>
+          <h1 className="mt-7 max-w-3xl font-display text-[clamp(3.3rem,11vw,7.8rem)] font-semibold leading-[.84] tracking-[-.065em] text-ink">
+            Thoughtful<br /><span className="hero-title-accent">software</span><br />in progress.
+          </h1>
+          <p className="mt-8 max-w-lg text-base leading-8 text-muted sm:text-lg">
+            I&apos;m Abdulhadi, an A Levels student exploring computer science and the web by turning curious ideas into useful interfaces.
+          </p>
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <a href="#projects" className="hero-primary-action">View my work <ArrowDownRight className="h-4 w-4" /></a>
+            <a href="#contact" className="hero-secondary-action">Contact me <ArrowUpRight className="h-4 w-4" /></a>
+          </div>
+          <div className="mt-14 flex items-center gap-5 text-xs text-muted">
+            <span className="flex items-center gap-2"><Layers3 className="h-4 w-4 text-cyan" /> Web interfaces</span>
+            <span className="h-4 w-px bg-line" />
+            <span>Learning in public</span>
+          </div>
         </div>
+        <WorkspacePreview />
       </div>
-
-      <div className="hero-3d-mobile relative z-10 mt-10 flex w-full justify-center lg:hidden">
-        <Interactive3D />
-      </div>
+      <a href="#about" className="hero-scroll-hint" aria-label="Scroll to about section"><span>Scroll to explore</span><ArrowDownRight className="h-4 w-4" /></a>
     </section>
   );
 }

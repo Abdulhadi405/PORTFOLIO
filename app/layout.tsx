@@ -4,12 +4,12 @@ import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://abdulhadi.me"),
-  title: "Abdulhadi - Student Exploring Computer Science & Technology",
+  title: "Abdulhadi Tahir — Developer & Curious Builder",
   description:
-    "Abdulhadi Tahir is an A Levels student from Faisalabad exploring computer science, programming, web development, and technology.",
+    "Abdulhadi Tahir is an A Levels student exploring computer science, programming, web development, and technology through thoughtful projects.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Abdulhadi - Student Exploring Computer Science & Technology",
+    title: "Abdulhadi Tahir — Developer & Curious Builder",
     description:
       "A student portfolio focused on computer science, programming, technology, and learning by building.",
     url: "https://abdulhadi.me",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Abdulhadi - Student Exploring Computer Science & Technology",
+    title: "Abdulhadi Tahir — Developer & Curious Builder",
     description:
       "A student portfolio focused on computer science, programming, technology, and learning by building.",
   },

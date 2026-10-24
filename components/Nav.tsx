@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import LiquidGlassPill from "@/components/LiquidGlassPill";
+import { MobileSearch } from "@/components/CommandPalette";
 
 const LINKS = [
   { href: "#about", label: "About" },
@@ -47,19 +48,25 @@ export default function Nav() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
     };
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (open && target instanceof Element && !target.closest(".nav-liquid-pill")) setOpen(false);
+    };
 
     const onResize = () => {
       if (window.innerWidth >= 640) setOpen(false);
     };
 
     document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("resize", onResize);
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("resize", onResize);
     };
-  }, []);
+  }, [open]);
 
   useEffect(() => {
     // Prevent the page from moving underneath the expanded mobile menu.
@@ -98,7 +105,7 @@ export default function Nav() {
                 href={link.href}
                 className={`relative rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 hover:-translate-y-0.5 ${
                   active === link.href
-                    ? "bg-white/10 text-ink"
+                    ? "nav-link--active text-ink"
                     : "text-muted hover:text-ink"
                 }`}
               >
@@ -107,12 +114,15 @@ export default function Nav() {
             ))}
           </div>
 
+          <MobileSearch onOpenMenu={() => setOpen(false)} />
+
           <button
             type="button"
             aria-expanded={open}
             aria-controls="mobile-primary-menu"
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={(event) => {
+              window.dispatchEvent(new Event("portfolio:menu-toggle"));
               const button = event.currentTarget;
               const panel = button.closest(".nav-liquid-pill")?.querySelector<HTMLElement>(".mobile-menu-panel");
               const rect = button.getBoundingClientRect();

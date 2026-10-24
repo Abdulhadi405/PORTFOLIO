@@ -63,6 +63,18 @@ export default function LiquidGlassPill({
 
     window.addEventListener("scroll", onScroll, { passive: true });
 
+    const supportsPointer = window.matchMedia("(pointer: fine)").matches;
+    const onPointerMove = (event: PointerEvent) => {
+      if (!supportsPointer) return;
+      const rect = root.getBoundingClientRect();
+      root.style.setProperty("--glass-pointer-x", `${event.clientX - rect.left}px`);
+      root.style.setProperty("--glass-pointer-y", `${event.clientY - rect.top}px`);
+      root.style.setProperty("--glass-pointer-opacity", "1");
+    };
+    const onPointerLeave = () => root.style.setProperty("--glass-pointer-opacity", "0");
+    root.addEventListener("pointermove", onPointerMove, { passive: true });
+    root.addEventListener("pointerleave", onPointerLeave);
+
     const animate = () => {
       // Let the scroll signal decay between events, then spring the material
       // toward that target. This gives a soft physical lag and settle.
@@ -103,6 +115,8 @@ export default function LiquidGlassPill({
 
     return () => {
       window.removeEventListener("scroll", onScroll);
+      root.removeEventListener("pointermove", onPointerMove);
+      root.removeEventListener("pointerleave", onPointerLeave);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
