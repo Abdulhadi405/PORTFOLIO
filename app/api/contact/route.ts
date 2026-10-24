@@ -111,6 +111,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
+          code: "EMAIL_NOT_CONFIGURED",
           error: "Something went wrong. Please try again.",
         },
         { status: 503 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Braces, Code2, Cpu, FileCode2, Layers3, Sparkles } from "lucide-react";
+import { Braces, Code2, FileCode2, Layers3, Sparkles, Terminal } from "lucide-react";
 
 type Skill = {
   name: string;
@@ -9,17 +9,17 @@ type Skill = {
   description: string;
   icon: typeof Code2;
   glyph: string;
-  strength: number;
   tags: string[];
 };
 
 const SKILLS: Skill[] = [
-  { name: "HTML", level: "Structure", description: "Semantic, accessible page structure and clean component foundations.", icon: FileCode2, glyph: "< />", strength: 88, tags: ["Semantic", "Accessible", "SEO"] },
-  { name: "CSS", level: "Interface", description: "Responsive layouts, motion, visual systems and polished interactions.", icon: Layers3, glyph: "#{}", strength: 90, tags: ["Responsive", "Motion", "Glass UI"] },
-  { name: "JavaScript", level: "Logic", description: "Interactive experiences, state, browser APIs and practical problem solving.", icon: Braces, glyph: "JS", strength: 82, tags: ["DOM", "APIs", "Interaction"] },
-  { name: "Python", level: "Tools", description: "Small utilities, automation and experiments that turn ideas into working tools.", icon: Cpu, glyph: "Py", strength: 76, tags: ["Automation", "Utilities", "Scripting"] },
-  { name: "React", level: "UI", description: "Reusable components and dynamic interfaces built around user interaction.", icon: Sparkles, glyph: "⚛", strength: 80, tags: ["Components", "State", "UX"] },
-  { name: "Next.js", level: "Full stack", description: "Modern React applications with routing, APIs and production-ready structure.", icon: Code2, glyph: "N", strength: 78, tags: ["Routing", "API", "Deploy"] },
+  { name: "HTML", level: "Structure", description: "Semantic, accessible page structure and clean component foundations.", icon: FileCode2, glyph: "< />", tags: ["Semantic", "Accessible", "SEO"] },
+  { name: "CSS", level: "Interface", description: "Responsive layouts, motion, visual systems and polished interactions.", icon: Layers3, glyph: "#{}", tags: ["Responsive", "Motion", "Visual systems"] },
+  { name: "JavaScript", level: "Logic", description: "Interactive experiences, state, browser APIs and practical problem solving.", icon: Braces, glyph: "JS", tags: ["DOM", "APIs", "Interaction"] },
+  { name: "React", level: "UI", description: "Reusable components and dynamic interfaces built around user interaction.", icon: Sparkles, glyph: "React", tags: ["Components", "State", "UX"] },
+  { name: "Next.js", level: "Full stack", description: "Modern React applications with routing, APIs and production-ready structure.", icon: Code2, glyph: "N", tags: ["Routing", "API", "Deploy"] },
+  { name: "TypeScript", level: "Safety", description: "Typed component props, API boundaries and safer application code across the portfolio.", icon: Terminal, glyph: "TS", tags: ["Types", "Interfaces", "Contracts"] },
+  { name: "Tailwind CSS", level: "Styling", description: "A utility-first styling system with responsive tokens, states and accessible focus treatment.", icon: Layers3, glyph: "TW", tags: ["Responsive", "Tokens", "States"] },
 ];
 
 export default function Skills() {
@@ -28,13 +28,13 @@ export default function Skills() {
   const Icon = skill.icon;
 
   return (
-    <section id="skills" className="mx-auto max-w-5xl px-6 py-24 sm:px-12 sm:py-32 lg:px-24">
+    <section id="skills" className="editorial-section mx-auto max-w-6xl px-6 py-24 sm:px-12 sm:py-32 lg:px-16">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-panel/50 px-3 py-1.5 text-xs font-medium text-muted backdrop-blur-sm">
+          <div className="section-kicker mb-5">
             <Sparkles className="h-3.5 w-3.5 text-cyan" /> Interactive toolkit
           </div>
-          <h2 className="font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">Skills</h2>
+          <h2 className="font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">The toolkit, in motion.</h2>
           <p className="mt-4 max-w-lg text-muted">Explore the stack I use to turn ideas into interfaces, experiments and small web products.</p>
         </div>
         <span className="text-xs uppercase tracking-[0.18em] text-muted">{String(active + 1).padStart(2, "0")} / {String(SKILLS.length).padStart(2, "0")}</span>
@@ -83,18 +83,14 @@ export default function Skills() {
             <div className="flex flex-1 flex-col justify-center py-6">
               <div className="flex items-end justify-between gap-4">
                 <div>
-                  <p className="text-sm font-medium uppercase tracking-[0.16em] text-muted">Current strength</p>
-                  <p className="mt-2 font-display text-4xl font-semibold tracking-tight text-ink">{skill.strength}%</p>
+                      <p className="text-sm font-medium uppercase tracking-[0.16em] text-muted">How I use it</p>
+                      <p className="mt-2 font-display text-3xl font-semibold tracking-tight text-ink">Learn by building</p>
                 </div>
                 <div className="flex h-20 w-20 items-center justify-center rounded-full border border-line bg-panel/60">
                   <div className="flex h-14 w-14 items-center justify-center rounded-full border border-cyan/20 bg-cyan/5">
                     <Icon className="h-6 w-6 text-cyan" />
                   </div>
                 </div>
-              </div>
-
-              <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/5">
-                <div className="h-full rounded-full bg-cyan transition-all duration-700 [box-shadow:0_0_20px_rgba(95,232,210,.22)]" style={{ width: `${skill.strength}%` }} />
               </div>
 
               <p className="mt-5 max-w-xl text-sm leading-7 text-muted">{skill.description}</p>

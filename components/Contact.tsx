@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import { Check, Github, Instagram, Linkedin, Mail, Send, Sparkles } from "lucide-react";
+import { Check, Copy, Github, Instagram, Linkedin, Mail, Send, Sparkles } from "lucide-react";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -15,6 +15,17 @@ const SOCIALS = [
 export default function Contact() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText("abdulhaditahir405@gmail.com");
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      setErrorMsg("Clipboard access is unavailable. Use the email link instead.");
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -76,7 +87,7 @@ export default function Contact() {
               <div className="relative mt-8">
                 <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-cyan/80">Message delivered</p>
                 <h3 className="mt-3 font-display text-3xl font-semibold text-ink sm:text-4xl">That went through.</h3>
-                <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-muted">Your message has been handed off successfully. I'll get back to you as soon as I can.</p>
+                <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-muted">Your message has been handed off successfully. I&apos;ll get back to you as soon as I can.</p>
               </div>
               <div className="relative mt-8 flex items-center gap-3 rounded-full border border-line bg-deep/50 px-4 py-2 text-[10px] uppercase tracking-[0.16em] text-muted">
                 <span className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_rgba(95,232,210,0.7)]" />
@@ -87,7 +98,7 @@ export default function Contact() {
           ) : (
             <form onSubmit={handleSubmit} className="relative flex flex-col gap-4">
               <div className="mb-2 flex items-center justify-between gap-4 border-b border-line pb-4">
-                <div><p className="text-[10px] font-medium uppercase tracking-[0.22em] text-cyan/80">Direct message</p><h3 className="mt-1 font-display text-xl font-semibold text-ink">Let's build something.</h3></div>
+                <div><p className="text-[10px] font-medium uppercase tracking-[0.22em] text-cyan/80">Direct message</p><h3 className="mt-1 font-display text-xl font-semibold text-ink">Let&apos;s build something.</h3></div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-deep/50 text-muted"><Send className="h-4 w-4" /></div>
               </div>
 
@@ -126,6 +137,10 @@ export default function Contact() {
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
             {SOCIALS.map(({ label, href, icon: Icon }) => <a key={label} href={href} target={label === "Email" ? undefined : "_blank"} rel={label === "Email" ? undefined : "noreferrer"} className="group flex items-center gap-3 rounded-2xl border border-line bg-panel/25 px-4 py-3.5 text-sm text-ink transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan/25 hover:bg-panel/50"><span className="flex h-9 w-9 items-center justify-center rounded-xl border border-line bg-deep/50 text-muted transition-colors group-hover:text-cyan"><Icon className="h-4 w-4" /></span><span>{label}</span><span className="ml-auto text-muted transition-transform duration-300 group-hover:translate-x-1">→</span></a>)}
           </div>
+          <button type="button" onClick={copyEmail} className="flex items-center justify-center gap-2 rounded-2xl border border-line bg-panel/25 px-4 py-3.5 text-sm text-muted transition hover:border-cyan/30 hover:text-cyan">
+            <Copy className="h-4 w-4" /> {copied ? "Email copied" : "Copy email address"}
+          </button>
+          {errorMsg && status === "idle" && <p className="text-center text-xs text-amber-200/80" role="status">{errorMsg}</p>}
         </div>
       </div>
     </section>
