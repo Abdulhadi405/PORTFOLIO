@@ -37,7 +37,7 @@ The portfolio is an ongoing personal project and a place to explore modern web i
 ### UI & Interaction
 
 - Responsive Hero, About, Skills, Journey, Projects, Contact, and Footer sections
-- Light editorial visual design with selective glass surfaces
+- Dark luminous-workspace visual design with glass-inspired surfaces
 - Interactive skills workspace
 - Responsive desktop and mobile layouts
 - Inline mobile search with compact results and keyboard support
@@ -70,6 +70,10 @@ The contact section uses a server-side API rather than a static form.
 - Mailto fallback when email delivery is not configured
 
 Sensitive API credentials remain server-side and are not exposed to the browser.
+The contact endpoint uses a process-local, best-effort rate limit. On Vercel, limits are not shared across serverless instances; use a distributed rate-limiting service if a dependable global cap is required.
+For an additional platform-level limit, configure a [Vercel WAF rate-limit rule](https://vercel.com/docs/vercel-firewall/vercel-waf/rate-limiting) for `POST /api/contact`. It is available on Hobby, but counters are regional rather than a single global counter. A globally shared application-level limit requires a configured shared store such as Upstash Redis.
+
+Production responses include baseline security headers. The CSP restricts framing, base URLs, and embedded objects without imposing a script policy that could disrupt Next.js or analytics.
 
 ## Tech Stack
 
@@ -90,6 +94,9 @@ Sensitive API credentials remain server-side and are not exposed to the browser.
 PORTFOLIO/
 ├── app/
 │   ├── api/contact/
+│   ├── icon.svg
+│   ├── robots.ts
+│   ├── sitemap.ts
 │   ├── globals.css
 │   ├── layout.tsx
 │   └── page.tsx
@@ -115,7 +122,7 @@ PORTFOLIO/
 
 ### Requirements
 
-- Node.js 20.9+
+- Node.js 20.9+ (20.x) or 22+
 - npm
 
 ### Clone the repository
@@ -128,7 +135,7 @@ cd PORTFOLIO
 ### Install and run
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 

@@ -42,19 +42,35 @@ function getClientIp(req: NextRequest): string {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json(
+        { ok: false, error: "Invalid request body." },
+        { status: 400 }
+      );
+    }
+
+    if (typeof body !== "object" || body === null || Array.isArray(body)) {
+      return NextResponse.json(
+        { ok: false, error: "Invalid request body." },
+        { status: 400 }
+      );
+    }
+    const payload = body as Record<string, unknown>;
 
     const name =
-      typeof body.name === "string" ? body.name.trim() : "";
+      typeof payload.name === "string" ? payload.name.trim() : "";
 
     const email =
-      typeof body.email === "string" ? body.email.trim() : "";
+      typeof payload.email === "string" ? payload.email.trim() : "";
 
     const message =
-      typeof body.message === "string" ? body.message.trim() : "";
+      typeof payload.message === "string" ? payload.message.trim() : "";
 
     const company =
-      typeof body.company === "string" ? body.company.trim() : "";
+      typeof payload.company === "string" ? payload.company.trim() : "";
 
     // Honeypot protection.
     if (company) {
@@ -134,7 +150,7 @@ export async function POST(req: NextRequest) {
     const result = await resend.emails.send({
       from: FROM_EMAIL,
       to: TO_EMAIL,
-      reply_to: email,
+      replyTo: email,
       subject,
       text,
     });

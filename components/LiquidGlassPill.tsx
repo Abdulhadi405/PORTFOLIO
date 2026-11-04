@@ -50,6 +50,7 @@ export default function LiquidGlassPill({
     s.lastT = performance.now();
 
     const onScroll = () => {
+      if (reduced) return;
       const now = performance.now();
       const y = window.scrollY;
       const dt = Math.max(8, now - s.lastT);
@@ -59,9 +60,8 @@ export default function LiquidGlassPill({
       s.target = Math.min(1, speed / (mobile ? 1900 : 2400));
       s.lastY = y;
       s.lastT = now;
+      scheduleAnimation();
     };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
 
     const supportsPointer = window.matchMedia("(pointer: fine)").matches;
     const onPointerMove = (event: PointerEvent) => {
@@ -76,6 +76,9 @@ export default function LiquidGlassPill({
     root.addEventListener("pointerleave", onPointerLeave);
 
     const animate = () => {
+      rafRef.current = null;
+      if (reduced) return;
+
       // Let the scroll signal decay between events, then spring the material
       // toward that target. This gives a soft physical lag and settle.
       s.target *= 0.88;
@@ -87,7 +90,7 @@ export default function LiquidGlassPill({
       s.value += s.velocity;
       s.value = Math.max(0, Math.min(1, s.value));
 
-      const amount = reduced ? 0 : s.value;
+      const amount = s.value;
 
       // Keep the effect restrained. The reference feeling is an optical lens,
       // not a noisy/glitchy text animation.
@@ -108,16 +111,24 @@ export default function LiquidGlassPill({
       redOffsetRef.current?.setAttribute("dx", (-chroma).toFixed(2));
       blueOffsetRef.current?.setAttribute("dx", chroma.toFixed(2));
 
-      rafRef.current = requestAnimationFrame(animate);
+      if (s.target > 0.001 || Math.abs(s.value) > 0.001 || Math.abs(s.velocity) > 0.001) {
+        scheduleAnimation();
+      }
     };
 
-    rafRef.current = requestAnimationFrame(animate);
+    function scheduleAnimation() {
+      if (rafRef.current === null) {
+        rafRef.current = requestAnimationFrame(animate);
+      }
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", onScroll);
       root.removeEventListener("pointermove", onPointerMove);
       root.removeEventListener("pointerleave", onPointerLeave);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 

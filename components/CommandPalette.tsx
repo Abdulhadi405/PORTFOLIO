@@ -25,6 +25,7 @@ export default function CommandPalette() {
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
   const results = ITEMS.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()));
   const navigate = useNavigation();
@@ -53,12 +54,43 @@ export default function CommandPalette() {
     }
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+
+    const trapFocus = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+        'input:not([disabled]), button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusable?.length) {
+        event.preventDefault();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!dialogRef.current?.contains(document.activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", trapFocus);
+    return () => document.removeEventListener("keydown", trapFocus);
+  }, [open]);
+
   const choose = (href: string) => { setOpen(false); navigate(href); };
 
   return (
     <>
       <button type="button" className="command-trigger" onClick={() => { setQuery(""); setOpen(true); }} aria-label="Open command palette"><Command className="h-3.5 w-3.5" /><span>Search</span><kbd>⌘ K</kbd></button>
-      {open && <div className="command-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpen(false); }}><div className="command-dialog" role="dialog" aria-modal="true" aria-label="Command palette"><div className="command-search"><Search className="h-4 w-4 text-muted" /><input ref={inputRef} value={query} onChange={(event) => { setQuery(event.target.value); setActiveIndex(0); }} onKeyDown={(event) => { if (!results.length) return; if (event.key === "ArrowDown") { event.preventDefault(); setActiveIndex((index) => (index + 1) % results.length); } if (event.key === "ArrowUp") { event.preventDefault(); setActiveIndex((index) => (index - 1 + results.length) % results.length); } if (event.key === "Enter") { event.preventDefault(); choose(results[activeIndex].href); } }} placeholder="Where would you like to go?" aria-label="Search commands" /><kbd>ESC</kbd></div><div className="command-results">{results.length ? results.map((item, index) => <button key={item.label} type="button" onClick={() => choose(item.href)} className={`command-result ${activeIndex === index ? "command-result--active" : ""}`}><span className="flex items-center gap-3">{item.external ? <ArrowUpRight className="h-4 w-4 text-cyan" /> : <Command className={`h-4 w-4 ${item.label.includes("Contact") ? "text-cyan" : "text-muted"}`} />}{item.label}</span><kbd>{item.shortcut}</kbd></button>) : <p className="command-empty">No commands match &quot;{query}&quot;.</p>}</div><div className="command-footer"><span>Navigate with search</span><span><kbd>ESC</kbd> to close</span></div></div></div>}
+      {open && <div className="command-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpen(false); }}><div ref={dialogRef} className="command-dialog" role="dialog" aria-modal="true" aria-label="Command palette"><div className="command-search"><Search className="h-4 w-4 text-muted" /><input ref={inputRef} value={query} onChange={(event) => { setQuery(event.target.value); setActiveIndex(0); }} onKeyDown={(event) => { if (!results.length) return; if (event.key === "ArrowDown") { event.preventDefault(); setActiveIndex((index) => (index + 1) % results.length); } if (event.key === "ArrowUp") { event.preventDefault(); setActiveIndex((index) => (index - 1 + results.length) % results.length); } if (event.key === "Enter") { event.preventDefault(); choose(results[activeIndex].href); } }} placeholder="Where would you like to go?" aria-label="Search commands" /><kbd>ESC</kbd></div><div className="command-results">{results.length ? results.map((item, index) => <button key={item.label} type="button" onClick={() => choose(item.href)} className={`command-result ${activeIndex === index ? "command-result--active" : ""}`}><span className="flex items-center gap-3">{item.external ? <ArrowUpRight className="h-4 w-4 text-cyan" /> : <Command className={`h-4 w-4 ${item.label.includes("Contact") ? "text-cyan" : "text-muted"}`} />}{item.label}</span><kbd>{item.shortcut}</kbd></button>) : <p className="command-empty">No commands match &quot;{query}&quot;.</p>}</div><div className="command-footer"><span>Navigate with search</span><span><kbd>ESC</kbd> to close</span></div></div></div>}
     </>
   );
 }

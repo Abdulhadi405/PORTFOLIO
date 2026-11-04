@@ -331,8 +331,6 @@ body {
   .hero-float--top { right: 0; }
   .hero-float--bottom { left: 0; }
   .hero-scroll-hint { display: none; }
-  .command-trigger { right: 1rem; top: auto; bottom: 1rem; font-size: 0; }
-  .command-trigger kbd { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -432,6 +430,10 @@ body {
 
 .command-trigger:hover { color: #eef2f8; border-color: rgba(114,230,209,.35); transform: translateY(-2px); }
 .command-trigger kbd, .command-search kbd, .command-result kbd, .command-footer kbd { border: 1px solid rgba(255,255,255,.12); border-radius: .35rem; padding: .2rem .35rem; color: rgba(145,160,181,.75); font: .6rem ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+@media (max-width: 700px) {
+  .command-trigger { display: none; }
+}
 
 .command-overlay {
   position: fixed;

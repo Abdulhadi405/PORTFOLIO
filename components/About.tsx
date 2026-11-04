@@ -1,6 +1,6 @@
 import { ArrowUpRight, BookOpen, GraduationCap } from "lucide-react";
 
-const learning = ["HTML", "CSS", "JavaScript", "Python", "React", "Next.js"];
+const learning = ["HTML", "CSS", "JavaScript", "React", "Next.js"];
 
 export default function About() {
   return (
