@@ -92,6 +92,7 @@ export default function Projects() {
   const [selected, setSelected] = useState<Project | null>(null);
   const [shared, setShared] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const modalRef = useRef<HTMLElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
   const visibleProjects = filter === "All" ? PROJECTS : PROJECTS.filter((project) => project.category === filter);
 
@@ -99,7 +100,34 @@ export default function Projects() {
     if (!selected) return;
     previousFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     requestAnimationFrame(() => closeButtonRef.current?.focus());
-    const onKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") setSelected(null); };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelected(null);
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusable = modalRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusable?.length) {
+        event.preventDefault();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!modalRef.current?.contains(document.activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
     document.addEventListener("keydown", onKeyDown);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
@@ -142,7 +170,7 @@ export default function Projects() {
         {visibleProjects.map((project) => { const Icon = project.icon; return <article key={project.id} className="project-card group rounded-[1.75rem] border border-line bg-panel p-4 shadow-[0_14px_45px_rgba(0,0,0,.16)] sm:p-6"><button type="button" className="block w-full text-left" onClick={() => setSelected(project)} aria-label={`View details for ${project.title}`} data-cursor="interactive"><ProjectPreview id={project.id} /><span className="project-concept-label">{project.id === "clinic" ? "Illustrative concept preview · not a screenshot" : "Illustrative interface preview"}</span></button><div className="mt-5 flex items-start justify-between gap-4"><div><div className="mb-2 text-[10px] font-semibold uppercase tracking-[.18em] text-cyan">{project.category}</div><h3 className="font-display text-2xl font-semibold tracking-tight text-ink">{project.title}</h3><p className="mt-2 max-w-md text-sm leading-7 text-muted">{project.description}</p></div><Icon className="mt-1 hidden h-5 w-5 shrink-0 text-blue sm:block" /></div><div className="mt-5 flex flex-wrap items-center gap-2">{project.tags.map((tag) => <span key={tag} className="rounded-full border border-line bg-deep px-3 py-1.5 text-xs text-muted">{tag}</span>)}<span className="ml-auto flex items-center gap-2 text-xs font-medium text-blue"><CircleDot className="h-3 w-3" /> {project.status}</span></div><div className="mt-5 flex flex-wrap gap-2"><button type="button" onClick={() => setSelected(project)} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-line px-4 py-2 text-xs font-semibold text-ink transition hover:border-cyan/40 hover:text-cyan">View details <ArrowUpRight className="h-3.5 w-3.5" /></button>{project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" onClick={(event) => event.stopPropagation()} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-ink px-4 py-2 text-xs font-semibold text-void transition hover:-translate-y-0.5">Visit live website <ExternalLink className="h-3.5 w-3.5" /></a>}</div></article>; })}
       </div>
       <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-2xl border border-dashed border-line bg-deep/60 p-5 text-center sm:flex-row sm:text-left"><div><p className="font-display font-semibold text-ink">More experiments are on the way.</p><p className="mt-1 text-sm text-muted">Follow along for the next thing I ship.</p></div><a href="https://github.com/Abdulhadi405" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-line bg-panel px-4 py-2.5 text-sm font-medium text-ink transition hover:-translate-y-0.5 hover:border-blue/40 hover:text-blue">Visit GitHub <ArrowUpRight className="h-4 w-4" /></a></div>
-      {selected && <div className="project-modal-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelected(null); }}><section className="project-modal" role="dialog" aria-modal="true" aria-labelledby="project-modal-title"><button ref={closeButtonRef} type="button" className="project-modal-close" onClick={() => setSelected(null)} aria-label="Close project details"><X className="h-4 w-4" /></button><p className="section-kicker">{selected.category}</p><h3 id="project-modal-title" className="mt-3 font-display text-3xl font-semibold text-ink">{selected.title}</h3><p className="mt-4 text-sm leading-7 text-muted">{selected.details}</p><div className="mt-6 flex flex-wrap gap-2">{selected.tags.map((tag) => <span key={tag} className="rounded-full border border-line bg-deep px-3 py-1.5 text-xs text-muted">{tag}</span>)}</div><div className="mt-8 flex flex-wrap gap-3">{selected.liveUrl && <a href={selected.liveUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2.5 text-sm font-semibold text-void">Visit live website <ExternalLink className="h-4 w-4" /></a>}<button type="button" onClick={() => shareProject(selected)} className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2.5 text-sm font-semibold text-ink hover:border-cyan/40 hover:text-cyan"><Share2 className="h-4 w-4" /> {shared ? "Link copied" : "Share project"}</button></div></section></div>}
+      {selected && <div className="project-modal-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelected(null); }}><section ref={modalRef} className="project-modal" role="dialog" aria-modal="true" aria-labelledby="project-modal-title"><button ref={closeButtonRef} type="button" className="project-modal-close" onClick={() => setSelected(null)} aria-label="Close project details"><X className="h-4 w-4" /></button><p className="section-kicker">{selected.category}</p><h3 id="project-modal-title" className="mt-3 font-display text-3xl font-semibold text-ink">{selected.title}</h3><p className="mt-4 text-sm leading-7 text-muted">{selected.details}</p><div className="mt-6 flex flex-wrap gap-2">{selected.tags.map((tag) => <span key={tag} className="rounded-full border border-line bg-deep px-3 py-1.5 text-xs text-muted">{tag}</span>)}</div><div className="mt-8 flex flex-wrap gap-3">{selected.liveUrl && <a href={selected.liveUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2.5 text-sm font-semibold text-void">Visit live website <ExternalLink className="h-4 w-4" /></a>}<button type="button" onClick={() => shareProject(selected)} className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2.5 text-sm font-semibold text-ink hover:border-cyan/40 hover:text-cyan"><Share2 className="h-4 w-4" /> {shared ? "Link copied" : "Share project"}</button></div></section></div>}
     </section>
   );
 }

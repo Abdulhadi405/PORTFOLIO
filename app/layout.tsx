@@ -36,7 +36,7 @@ export default function RootLayout({
           <div className="atmosphere-cyan-orb" />
         </div>
         {children}
-        <Analytics />
+        {process.env.VERCEL === "1" && <Analytics />}
       </body>
     </html>
   );

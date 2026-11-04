@@ -21,16 +21,20 @@ export default function Cursor() {
     let frame = 0;
 
     const render = () => {
+      frame = 0;
       ringX += (x - ringX) * 0.18;
       ringY += (y - ringY) * 0.18;
       dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
-      frame = requestAnimationFrame(render);
+      if (Math.abs(x - ringX) > 0.1 || Math.abs(y - ringY) > 0.1) {
+        frame = requestAnimationFrame(render);
+      }
     };
     const move = (event: PointerEvent) => {
       x = event.clientX;
       y = event.clientY;
       document.documentElement.classList.add("custom-cursor-ready");
+      if (!frame) frame = requestAnimationFrame(render);
     };
     const leave = () => document.documentElement.classList.remove("custom-cursor-ready");
     const overInteractive = (event: Event) => {
@@ -50,8 +54,6 @@ export default function Cursor() {
     window.addEventListener("pointerleave", leave);
     document.addEventListener("pointerover", overInteractive);
     document.addEventListener("pointerout", outInteractive);
-    frame = requestAnimationFrame(render);
-
     return () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerleave", leave);
